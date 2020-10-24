@@ -26,19 +26,22 @@ class CabysProducto(models.Model):
     _sql_constraints = [('codigo_uniq', 'unique (codigo)', 'Ya existe un registro con el mismo código.'),]
 
     @api.multi
-    @api.depends('name', 'codigo', 'cabys_categoria8_id', 'cabys_categoria7_id', 'cabys_categoria6_id')
+    @api.depends('name', 'codigo', 'cabys_categoria8_id', 'cabys_categoria7_id', 'cabys_categoria6_id', 'cabys_categoria5_id')
     def name_get(self):
         result = []
         for product in self:
             # get all category names
-            categories = [product.cabys_categoria8_id.name, product.cabys_categoria7_id.name, product.cabys_categoria6_id.name]
-            # eliminate duplicates
+            categories = [product.cabys_categoria8_id.name, product.cabys_categoria7_id.name,product.cabys_categoria6_id.name, product.cabys_categoria5_id.name]
+            # eliminate duplicated strings
             categories = list(set(categories))
             # join category names
             categories = '[%s]' % '] ['.join(categories)
             # make one big nice line
             name = '%s %s %s' % (product.codigo, product.name, categories)
-            result.append((product.id, name))
+            # shorten result string
+            name = '%s...' % name[:150] if len(name) > 150 else name[:150]
+
+            result.append((product.id, name[:150]))
         return result
 
     @api.model
@@ -49,5 +52,6 @@ class CabysProducto(models.Model):
         domain = args + ['|', ('name', operator, name), 
                             '|', ('codigo', operator, name), 
                                 '|', ('cabys_categoria8_id.name', operator, name), 
-                                    '|', ('cabys_categoria7_id.name', operator, name), ('cabys_categoria6_id.name', operator, name)]
+                                    '|', ('cabys_categoria7_id.name', operator, name), 
+                                             ('cabys_categoria6_id.name', operator, name)]
         return super(CabysProducto, self).search(domain, limit=limit).name_get()
