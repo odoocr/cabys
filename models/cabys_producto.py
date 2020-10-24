@@ -23,6 +23,10 @@ class CabysProducto(models.Model):
     cabys_categoria2_id = fields.Many2one(related='cabys_categoria3_id.cabys_categoria2_id', string='Categoría 2', readonly=True)
     cabys_categoria1_id = fields.Many2one(related='cabys_categoria2_id.cabys_categoria1_id', string='Categoría 1', readonly=True)
 
+    product_ids = fields.One2many('product.template', 'cabys_product_id', string='Productos con este código')
+    category_ids = fields.One2many('product.category', 'cabys_product_id', string='Categorias con este código')
+
+
     _sql_constraints = [('codigo_uniq', 'unique (codigo)', 'Ya existe un registro con el mismo código.'),]
 
     @api.multi
@@ -41,7 +45,7 @@ class CabysProducto(models.Model):
             # shorten result string
             name = '%s...' % name[:150] if len(name) > 150 else name[:150]
 
-            result.append((product.id, name[:150]))
+            result.append((product.id, name))
         return result
 
     @api.model

@@ -12,9 +12,10 @@
     ],
     'data': [
         'views/cabys_views.xml',
-        'views/product_product.xml',
-        'views/product_template.xml',
-        'views/product_category.xml',
+        'views/cabys_producto_views.xml',
+        'views/product_product_views.xml',
+        'views/product_template_views.xml',
+        'views/product_category_views.xml',
         'views/assets.xml',
 
         'security/ir.model.access.csv',
