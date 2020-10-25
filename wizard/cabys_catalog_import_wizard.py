@@ -94,8 +94,8 @@ class CabysCatalogImportWizard(models.TransientModel):
             # get rows of data from workbook sheet
             rows = xl_sheet.get_rows()
             # skip first two header rows
-            rows.__next__()
-            rows.__next__()
+            rows.next()
+            rows.next()
 
             # here we will keep all categories data and products data
             all_categories = {}
@@ -109,19 +109,19 @@ class CabysCatalogImportWizard(models.TransientModel):
                 # get every subcategory for this row
                 for category_map in categories_map:
                     category = category_map['category']
-                    code = row[category_map['code']].value
-                    description = row[category_map['description']].value
+                    code = row[category_map['code']].value.encode('utf-8')
+                    description = row[category_map['description']].value.encode('utf-8')
                     if code not in all_categories[category]:
                         vals = {'code': code, 'description': description}
                         if 'subcategory' in category_map:
-                            vals['subcategory'] = row[category_map['subcategory']].value
+                            vals['subcategory'] = row[category_map['subcategory']].value.encode('utf-8')
                         all_categories[category][code] = vals
 
                 # process product
-                category = row[products_map['category']].value
-                description = row[products_map['description']].value
-                code = row[products_map['code']].value
-                tax = 0.0 if row[products_map['tax']].value == 'Exento' else float(row[products_map['tax']].value[:-1]) 
+                category = row[products_map['category']].value.encode('utf-8')
+                description = row[products_map['description']].value.encode('utf-8')
+                code = row[products_map['code']].value.encode('utf-8')
+                tax = 0.0 if row[products_map['tax']].value.encode('utf-8') == 'Exento' else float(row[products_map['tax']].value.encode('utf-8')[:-1]) 
                 all_products[code] = {'name': description, 'codigo': code, 'impuesto': tax, 'cabys_categoria8_id': category}
 
             # sort categories in order to process them orderly
@@ -235,7 +235,8 @@ class CabysCatalogImportWizard(models.TransientModel):
             # we will check the headers names to infer if this is a Cabys catalog file
             for header in headers_map:
                 cell = xl_sheet.cell(1, header['column'])
-                if cell.value != header['header']:
+                cell_header = cell.value.encode('utf-8')
+                if cell_header != header['header']:
                     self.notes = 'El archivo seleccionado no parece ser un catálogo Cabys'
                     self.button_enable = False
                     return
@@ -273,17 +274,17 @@ class CabysCatalogImportWizard(models.TransientModel):
             # get rows of data from workbook sheet
             rows = xl_sheet.get_rows()
             # skip first two header rows
-            rows.__next__()
-            rows.__next__()
+            rows.next()
+            rows.next()
             # here we will process all the records (rows in catalog file)
             products_codes = []
             # iterate over every row
             for row in rows:
                 # get product data
-                code = row[products_map['code']].value
-                cabys_categoria8_id = row[products_map['category']].value
-                name = row[products_map['description']].value
-                impuesto = 0.0 if row[products_map['tax']].value == 'Exento' else float(row[products_map['tax']].value[:-1]) 
+                code = row[products_map['code']].value.encode('utf-8')
+                cabys_categoria8_id = row[products_map['category']].value.encode('utf-8')
+                name = row[products_map['description']].value.encode('utf-8')
+                impuesto = 0.0 if row[products_map['tax']].value.encode('utf-8') == 'Exento' else float(row[products_map['tax']].value.encode('utf-8')[:-1]) 
                 
                 products_codes.append(code)
 
