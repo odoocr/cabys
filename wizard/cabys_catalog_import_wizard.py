@@ -3,7 +3,7 @@ from odoo import api, fields, models, _
 from xlrd import open_workbook
 import logging
 import base64
-import urllib.request
+import urllib2
 
 _logger = logging.getLogger(__name__)
 
@@ -50,9 +50,12 @@ class CabysCatalogImportWizard(models.TransientModel):
         ''' Download the Cabys catalog Excel file from BCCR.
         '''
         _logger.info('downloading catalog %s' % self)
-        response = urllib.request.urlopen(self.file_url)
+        response = urllib2.urlopen(self.file_url)
         _logger.info(response)
-        self.cabys_excel_file = base64.b64encode(response.read())
+        excel_file = response.read()
+        # _logger.info(excel_file)
+        excel_file_encoded = base64.b64encode(excel_file)
+        self.cabys_excel_file = excel_file_encoded
         self.onchange_cabys_excel_file()
 
         return {
