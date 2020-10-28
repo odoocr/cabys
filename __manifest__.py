@@ -3,7 +3,7 @@
 
     'summary': "Catálogo de bienes y servicios para uso tributario y Cuentas Nacionales",
     'author': 'info@fakturacion.com',
-    'website': "https://github.com/nehemiascr/cabys.git",
+    'website': "https://github.com/odoocr/cabys",
     'category': 'Account',
     'version': '12.0.0.0.1',
     'license': 'OPL-1',
@@ -11,10 +11,11 @@
         'base', 'product',
     ],
     'data': [
+        'views/cabys_producto_views.xml',
         'views/cabys_views.xml',
-        'views/product_product.xml',
-        'views/product_template.xml',
-        'views/product_category.xml',
+        'views/product_product_views.xml',
+        'views/product_template_views.xml',
+        'views/product_category_views.xml',
         'views/assets.xml',
 
         'security/ir.model.access.csv',
