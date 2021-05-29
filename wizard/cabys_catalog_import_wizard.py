@@ -44,7 +44,7 @@ class CabysCatalogImportWizard(models.TransientModel):
     cabys_excel_file = fields.Binary(string='Archivo de Excel', copy=False, attachment=True)
     notes = fields.Text("Descripción", readonly=True)
     button_enable = fields.Boolean()
-    file_url = fields.Char(default='https://activos.bccr.fi.cr/sitios/bccr/indicadoreseconomicos/cabys/Catalogo-de-bienes-servicios.xlsx')
+    file_url = fields.Char(default='https://www.bccr.fi.cr/indicadores-economicos/cabys/Catalogo-de-bienes-servicios.xlsx')
 
     def download_catalog(self):
         ''' Download the Cabys catalog Excel file from BCCR.
